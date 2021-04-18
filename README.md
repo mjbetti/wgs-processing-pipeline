@@ -23,7 +23,7 @@ Detailed genetic ancestry reporting, as well as copy number variant (CNV) callin
 
 ## Getting started
 ### Installing dependencies
-The easiest way to install all of the required tools is via a package manager such as Anaconda (https://docs.conda.io/en/latest/miniconda.html). In this particular case, Miniconda3 (py37_4.8.3, linux-64) was used to install all of the following dependencies. For your convenience, a ready-to-use Anaconda environment can be installed using the ```wgs_pipeline_env.yml``` file. For the sake of intercompatibility, no specific version numbers were specified, so the most recent compatible version of each of the following tools will be installed:
+The easiest way to install all of the required tools is via a package manager such as Anaconda (https://docs.conda.io/en/latest/miniconda.html). For your convenience, a ready-to-use Anaconda environment can be installed using the ```wgs_pipeline_env.yml``` file. This environment contains all of the following dependencies:
 
 * ```fastqc```
 * ```bwa```
@@ -39,7 +39,7 @@ The easiest way to install all of the required tools is via a package manager su
 * ```tabix```
 * ```bcftools```
 
-Assuming Anaconda is already installed, all of the dependencies can be installed using the following command:
+Assuming Anaconda is already installed, installation of dependencies can be achieved with the following command:
 ```conda env create -f wgs_pipeline_env.yml```
 
 ### Downloading reference files
