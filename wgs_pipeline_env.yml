@@ -1,0 +1,20 @@
+name: wgs_pipeline
+channels:
+  - bioconda
+  - r
+  - conda-forge
+  - anaconda
+  - defaults
+dependencies:
+  - fastqc
+  - bwa
+  - picard
+  - gatk4
+  - openjdk
+  - r-base
+  - r-ggplot2
+  - r-gplots
+  - r-gsalib
+  - samtools
+  - vcftools
+  - tabix
