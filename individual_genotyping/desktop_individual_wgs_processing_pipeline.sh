@@ -47,8 +47,9 @@ samtools view \
 
 #Sort the aligned BAM file using Picard tools
 echo 'Sorting aligned BAM...'
-#mkdir $TMP_DIR
-picard SortSam \
+mkdir $TMP_DIR
+ulimit -c unlimited
+picard SortSam "-Xmx"$RAM\g  \
     CREATE_INDEX=true \
     INPUT=$INTER_DIR\/$OUT_PREF\.bam \
     OUTPUT=$INTER_DIR\/$OUT_PREF\.sorted.bam \
@@ -58,7 +59,8 @@ picard SortSam \
 
 #Merge reads from multiple runs
 echo 'Merging reads from multiple runs...'
-picard MergeSamFiles \
+ulimit -c unlimited
+picard MergeSamFiles "-Xmx"$RAM\g \
     ASSUME_SORTED=false \
     CREATE_INDEX=true \
     INPUT=$INTER_DIR\/$OUT_PREF\.sorted.bam \
@@ -68,12 +70,14 @@ picard MergeSamFiles \
     USE_THREADING=true \
     VALIDATION_STRINGENCY=STRICT
 
-samtools sort -@ $THREADS \
+samtools sort -m $(($RAM / 4))\g -@ $THREADS \
     -o $INTER_DIR\/$OUT_PREF\.sorted.merged.sorted.bam \
     $INTER_DIR\/$OUT_PREF\.sorted.merged.bam
 
 #Identify duplicate reads originating from the same single fragment of DNA, i.e. PCR artifacts
 echo 'Identifying PCR duplicates...'
+export _JAVA_OPTIONS=-Djava.io.tmpdir=$TMP_DIR
+ulimit -c unlimited
 gatk MarkDuplicatesSpark \
     -I $INTER_DIR\/$OUT_PREF\.sorted.merged.sorted.bam \
     -O $INTER_DIR\/$OUT_PREF\.sorted.merged.sorted.marked_duplicates.bam \
@@ -121,7 +125,9 @@ gatk AnalyzeCovariates \
 #Somatic short variant discovery (SNVs + Indels)
 #Use HaplotypeCaller to call germline SNPs and indels via local re-assemply of haplotypes. The output will be an intermediate GVCF file, containing raw, unfiltered SNP and indel calls
 echo 'Initial calling of SNPs and indels...'
-gatk HaplotypeCaller \
+ulimit -c unlimited
+export _JAVA_OPTIONS=-Djava.io.tmpdir=$TMP_DIR
+gatk --java-options "-Xmx"$RAM\g HaplotypeCaller \
     -R $REF_GENOME \
     -I $MAIN_OUT_DIR\/$OUT_PREF\.sorted.merged.sorted.marked_duplicates.recalibrated.bam \
     -O $INTER_DIR\/$OUT_PREF\.g.vcf \
@@ -131,7 +137,10 @@ bgzip $INTER_DIR\/$OUT_PREF\.g.vcf
 
 #Perform genotyping on one or more samples pre-called with HaplotypeCaller
 echo 'Genotyping pre-called samples...'
-gatk GenotypeGVCFs \
+ulimit -c unlimited
+export _JAVA_OPTIONS=-Djava.io.tmpdir=$TMP_DIR
+gatk --java-options "-Xmx"$RAM\g \
+GenotypeGVCFs \
 -R $REF_GENOME \
 -V $INTER_DIR\/$OUT_PREF\.g.vcf \
 -O $INTER_DIR\/$OUT_PREF\.vcf

@@ -24,7 +24,6 @@ SNPS1000G=$11
 OMNI=$12
 HAPMAP=$13
 THREADS=$14
-RAM=$15
 
 #Align the FASTQ files using BWA-MEM
 echo 'Aligning reads to the reference genome...'

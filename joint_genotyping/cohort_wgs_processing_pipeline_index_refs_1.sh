@@ -10,14 +10,14 @@
 
 #For Dante Labs data, the read group(s) of your sample can be determined by running the following command with your hg19 aligned BAM file:
 #   samtools view -H sample.bam | grep '@RG'
-REF_GENOME=$4
-TMP_DIR=$6
-INTER_DIR=$7
-DBSNP=$8
-MILLS=$9
-SNPS1000G=$10
-OMNI=$11
-HAPMAP=$12
+REF_GENOME=$1
+TMP_DIR=$2
+INTER_DIR=$3
+DBSNP=$4
+MILLS=$5
+SNPS1000G=$6
+OMNI=$7
+HAPMAP=$8
 
 #Index the downloaded refrence genome using BWA
 echo 'Indexing reference genome...'
