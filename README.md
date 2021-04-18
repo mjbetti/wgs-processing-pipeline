@@ -3,7 +3,17 @@
 This pipeline is intended for use with aligning whole genome sequencing data to a reference genome and performing subsequent variant calling. Two sets of pipeline scripts are included, one for performing variant calling on a single sample and another set for performing joing variant calling on a set of multiple samples. This pipeline is based on the GATK Best Practices Workflow (https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows).
 
 ### Variant calling pipeline
-The included ```wgs_processing_pipeline_individual.sh``` script is the simplest to run and takes in command line arguments specifying the paths of paired-end Illumina reads (in FASTQ format), desired prefix of the output files, the main directory to which final outputs should be saved, and then proceeds to map the paired reads to the most current genome build (GRCh38) using ```bwa-mem```. After some downstream processing, variants (SNPs and indels) are called using GATK's ```HaplotypeCaller```. The resulting single VCF can optionally be split into separate SNP and indel files.
+The included ```wgs_processing_pipeline_individual.sh``` script is the simplest to run and required the following command line arguments:
+
+*the paths of paired-end Illumina reads (in FASTQ format)
+*the desired prefix of the output files
+*the path of main directory to which final outputs should be saved (should already exist)
+*the path of the reference genome (in FASTA format)
+*the read groups of the sample(s) to be aligned
+*a directory to which temporary files will be written during processing
+*
+
+and then proceeds to map the paired reads to the most current genome build (GRCh38) using ```bwa-mem```. After some downstream processing, variants (SNPs and indels) are called using GATK's ```HaplotypeCaller```. The resulting single VCF can optionally be split into separate SNP and indel files.
 
 ### Variant Annotation
 The workflow for setting up and running GenomeChronicler is based off of the turotials presented by the Personal Genome Project UK (https://github.com/PGP-UK/GenomeChronicler) and Singularity (https://sylabs.io/guides/3.1/user-guide/). This tool takes in aligned reads (as a BAM file) and generates a PDF report highlighting the clinical significance of a panel of SNPs found in the proband's WGS data.
