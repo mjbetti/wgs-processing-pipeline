@@ -5,12 +5,12 @@ This pipeline is intended for use with aligning whole genome sequencing data to 
 ### Variant calling pipeline
 The included ```wgs_processing_pipeline_individual.sh``` script is the simplest to run and required the following command line arguments:
 
-*the paths of paired-end Illumina reads (in FASTQ format)
-*the desired prefix of the output files
-*the path of main directory to which final outputs should be saved (should already exist)
-*the path of the reference genome (in FASTA format)
-*the read groups of the sample(s) to be aligned
-*a directory to which temporary files will be written during processing
+* the paths of paired-end Illumina reads (in FASTQ format)
+* the desired prefix of the output files
+* the path of main directory to which final outputs should be saved (should already exist)
+* the path of the reference genome (in FASTA format)
+* the read groups of the sample(s) to be aligned
+* a directory to which temporary files will be written during processing
 *
 
 and then proceeds to map the paired reads to the most current genome build (GRCh38) using ```bwa-mem```. After some downstream processing, variants (SNPs and indels) are called using GATK's ```HaplotypeCaller```. The resulting single VCF can optionally be split into separate SNP and indel files.
