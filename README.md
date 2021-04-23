@@ -43,7 +43,7 @@ Assuming you have Anaconda already installed on your machine, the environment ca
 ```conda env create -f wgs_pipeline_env.yml```
 
 ### Downloading reference files
-Most of the required reference files can be downloaded from the Broad Institute's Google Cloud Bucket (https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/).
+Most of the required reference files can be downloaded from the Broad Institute's Google Cloud Bucket (https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/). The dbSNP reference panel was downloaded from downloaded from https://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606_b151_GRCh38p7/VCF/GATK/
 
 In total, we will need the following files:
 * GRCh38 (hg38) reference genome FASTA (```resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta```)
@@ -51,14 +51,14 @@ In total, we will need the following files:
 * 1000 Genomes Phase 1 high-confidence SNPs (```resources-broad-hg38-v0-1000G_phase1.snps.high_confidence.hg38.vcf```)
 * Omni reference panel (```resources-broad-hg38-v0-1000G_omni2.5.hg38.vcf```)
 * HapMap reference panel (```resources-broad-hg38-v0-hapmap_3.3.hg38.vcf```)
-* dbSNP reference panel (```00-All.vcf.gz```, downloaded from https://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606_b151_GRCh38p7/VCF/GATK/00-All.vcf.gz)
+* dbSNP reference panel (```00-All.vcf.gz```)
 
 There are variable assignments in the script for ClinVar and dbSNP reference files, as well, but these are not actually used in this workflow.
 
-## Running the pipeline script
+## Included scripts
 This repository contains several variations of the core pipeline script:
-* The ```individual_genotyping``` directory contains scripts that should be used when working with sequencing data from a single individual, meaning that you will not be performing joing genotyping. The ```cluster_individual_wgs_processing_pipeline.sh``` script is optimized for running on a UNIX-based cluster, while the ```desktop_individual_wgs_processing_pipeline.sh``` should be used if you are running this pipeline on a desktop computer. It has only been tested on macOS and Linux, although it should also work in a UNIX-based terminal on Windows. If you are using a cluster, 
-* 
+* The ```individual_genotyping``` directory contains scripts that should be used when working with sequencing data from a single individual, meaning that you will not be performing joing genotyping. The ```cluster_individual_wgs_processing_pipeline.sh``` script is optimized for running on a UNIX-based cluster, while the ```desktop_individual_wgs_processing_pipeline.sh``` should be used if you are running this pipeline on a desktop computer. It has only been tested on macOS and Linux, although it should also work in a UNIX-based terminal on Windows. If you are using a cluster, the pipeline script should be run interactively (as opposed to as a batch submission), as some of the GATK tools will otherwise not run properly.
+* The ```joint_genotyping``` directory, as its name suggests, contains pipeline scripts that should be used if you will be performing joing genotyping using multiple samples (i.e. sequencing data from more than one individual). Like the scripts for individual genotyping, 
 
 * ```MAIN_DIR``` - The main root directory to which all sub-directories and output files will be written to
 * ```FASTQ1``` - The first paired-end FASTQ file (forward reads)
