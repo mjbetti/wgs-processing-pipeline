@@ -97,26 +97,26 @@ This repository contains several variations of the core pipeline script:
  
 * The ```joint_genotyping``` directory, as its name suggests, contains pipeline scripts that should be used if you will be performing joing genotyping using multiple samples (i.e. sequencing data from more than one individual). Like the scripts for individual genotyping, the scripts beginning with "cluster" are optimized for running on a UNIX-based cluster, while the scripts designated "desktop" are intended for running on a desktop computer. The ```cohort_wgs_processing_pipeline_index_refs_1.sh``` script should be run first regardless of system, and then the remaining two scripts should be run based on whether you are using a cluster or desktop computer. As an example, the scripts should be run in the following sequence:
   * The initial ```cohort_wgs_processing_pipeline_index_refs_1.sh``` script will generate all of the required indices and dictionaries for all of your reference files. This is to avoid the process being repeated over and over again if you will be aligning and calling variants for multiple samples in parallel.
-  ```
-  REF_GENOME=path/to/reference/fasta
-  TMP_DIR=$MAIN_OUT_DIR\/path/to/directory/for/temp/files (will be created by the pipeline script)
-  INTER_DIR=$MAIN_OUT_DIR\/path/to/store/intermediate/files/during/processing (will be created by the pipeline script)
-  DBSNP=/path/to/dbsnp/reference/file
-  MILLS=/path/to/mills/reference/file
-  SNPS1000G=/path/to/1000_genomes/reference/file
-  OMNI=/path/to/omni/reference/file
-  HAPMAP=/path/to/hapmap/reference/file
+   ```
+   REF_GENOME=path/to/reference/fasta
+   TMP_DIR=$MAIN_OUT_DIR\/path/to/directory/for/temp/files (will be created by the pipeline script)
+   INTER_DIR=$MAIN_OUT_DIR\/path/to/store/intermediate/files/during/processing (will be created by the pipeline script)
+   DBSNP=/path/to/dbsnp/reference/file
+   MILLS=/path/to/mills/reference/file
+   SNPS1000G=/path/to/1000_genomes/reference/file
+   OMNI=/path/to/omni/reference/file
+   HAPMAP=/path/to/hapmap/reference/file
 
-  cohort_wgs_processing_pipeline_index_refs_1.sh \
-    $REF_GENOME \
-    $TMP_DIR \
-    $INTER_DIR \
-    $DBSNP \
-    $MILLS \
-    $SNPS1000G \
-    $OMNI \
-    $HAPMAP
-  ```
+   cohort_wgs_processing_pipeline_index_refs_1.sh \
+     $REF_GENOME \
+     $TMP_DIR \
+     $INTER_DIR \
+     $DBSNP \
+     $MILLS \
+     $SNPS1000G \
+     $OMNI \
+     $HAPMAP
+   ```
 
 * ```MAIN_DIR``` - The main root directory to which all sub-directories and output files will be written to
 * ```FASTQ1``` - The first paired-end FASTQ file (forward reads)
