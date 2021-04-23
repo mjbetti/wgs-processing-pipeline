@@ -59,7 +59,40 @@ There are variable assignments in the script for ClinVar and dbSNP reference fil
 This repository contains several variations of the core pipeline script:
 * The ```individual_genotyping``` directory contains scripts that should be used when working with sequencing data from a single individual, meaning that you will not be performing joing genotyping. The ```cluster_individual_wgs_processing_pipeline.sh``` script is optimized for running on a UNIX-based cluster, while the ```desktop_individual_wgs_processing_pipeline.sh``` should be used if you are running this pipeline on a desktop computer. It has only been tested on macOS and Linux, although it should also work in a UNIX-based terminal on Windows. If you are using a cluster, the pipeline script should be run interactively (as opposed to as a batch submission), as some of the GATK tools will otherwise not run properly.
   * You can run this script by specifying the required command line arguments, which will be read in by the parser:
-    * Test 
+    ```
+    FASTQ1=/path/to/forward/read
+    FASTQ2=/path/to/reverse/read
+    OUT_PREF=string (desired prefix for all output files)
+    MAIN_OUT_DIR=/path/to/desired/root/directory/for/outputs
+    REF_GENOME=path_to_reference_fasta
+    READ_GROUPS=read_groups_string (information on required format found at https://gatk.broadinstitute.org/hc/en-us/articles/360035890671-Read-groups)
+    TMP_DIR=$MAIN_OUT_DIR\/path/to/directory/for/temp/files (will be created by the pipeline script)
+    INTER_DIR=$MAIN_OUT_DIR\/path/to/store/intermediate/files/during/processing (will be created by the pipeline script)
+    DBSNP=/path/to/dbsnp/reference/file
+    MILLS=/path/to/mills/reference/file
+    SNPS1000G=/path/to/1000_genomes/reference/file
+    OMNI=/path/to/omni/reference/file
+    HAPMAP=/path/to/hapmap/reference/file
+    THREADS=int (number of CPU threads to use)
+    RAM=int (amount of RAM to use in GB)
+    
+    desktop_individual_wgs_processing_pipeline.sh \
+    $FASTQ1 \
+    $FASTQ2 \
+    $OUT_PREF \
+    $MAIN_OUT_DIR \
+    $REF_GENOME \
+    $READ_GROUPS \
+    $TMP_DIR \
+    $INTER_DIR \
+    $DBSNP \
+    $MILLS \
+    $SNPS1000G \
+    $OMNI \
+    $HAPMAP \
+    $THREADS \
+    $RAM
+    ```
 
 * The ```joint_genotyping``` directory, as its name suggests, contains pipeline scripts that should be used if you will be performing joing genotyping using multiple samples (i.e. sequencing data from more than one individual). Like the scripts for individual genotyping, the scripts beginning with "cluster" are optimized for running on a UNIX-based cluster, while the scripts designated "desktop" are intended for running on a desktop computer. These scripts should be run in the following sequence:
   * The 
