@@ -58,7 +58,7 @@ There are variable assignments in the script for ClinVar and dbSNP reference fil
 ## Included scripts
 This repository contains several variations of the core pipeline script:
 * The ```individual_genotyping``` directory contains scripts that should be used when working with sequencing data from a single individual, meaning that you will not be performing joing genotyping. The ```cluster_individual_wgs_processing_pipeline.sh``` script is optimized for running on a UNIX-based cluster, while the ```desktop_individual_wgs_processing_pipeline.sh``` should be used if you are running this pipeline on a desktop computer. It has only been tested on macOS and Linux, although it should also work in a UNIX-based terminal on Windows. If you are using a cluster, the pipeline script should be run interactively (as opposed to as a batch submission), as some of the GATK tools will otherwise not run properly.
-  * You can run this script by specifying the required command line arguments, which will be read in by the parser:
+  * You can run this script by specifying the required command line arguments, which will be read in by the parser. The cluster-optimized script can be run in exactly the same way, except that the RAM argument does not need to be specified.
     ```
     FASTQ1=/path/to/forward/read
     FASTQ2=/path/to/reverse/read
@@ -93,8 +93,6 @@ This repository contains several variations of the core pipeline script:
     $THREADS \
     $RAM
     ```
-  * The cluster-optimized script can be run in exactly the same way, except that the RAM argument does not need to be specified. 
- 
 * The ```joint_genotyping``` directory, as its name suggests, contains pipeline scripts that should be used if you will be performing joing genotyping using multiple samples (i.e. sequencing data from more than one individual). Like the scripts for individual genotyping, the scripts beginning with "cluster" are optimized for running on a UNIX-based cluster, while the scripts designated "desktop" are intended for running on a desktop computer. The ```cohort_wgs_processing_pipeline_index_refs_1.sh``` script should be run first regardless of system, and then the remaining two scripts should be run based on whether you are using a cluster or desktop computer. As an example, the scripts should be run in the following sequence:
   * The initial ```cohort_wgs_processing_pipeline_index_refs_1.sh``` script will generate all of the required indices and dictionaries for all of your reference files. This is to avoid the process being repeated over and over again if you will be aligning and calling variants for multiple samples in parallel.
     ```
@@ -117,7 +115,7 @@ This repository contains several variations of the core pipeline script:
       $OMNI \
       $HAPMAP
     ```
-  * The second ```desktop_cohort_wgs_processing_pipeline_index_refs_2.sh``` script will run alignment and generation of the initial GVCF files. This script should be run individually (either in parallel or sequentially) for each individual sample.
+  * The second ```desktop_cohort_wgs_processing_pipeline_index_refs_2.sh``` script will run alignment and generation of the initial GVCF files. This script should be run individually (either in parallel or sequentially) for each individual sample. The ```cluster_cohort_wgs_processing_pipeline_index_refs_2.sh``` script optimized for use on a cluster would be run in the same way, except that the final RAM argument should not be specified.
     ```
     FASTQ1=/path/to/forward/read
     FASTQ2=/path/to/reverse/read
@@ -150,7 +148,24 @@ This repository contains several variations of the core pipeline script:
       $HAPMAP \
       $THREADS
      ```
-  * The third ```cohort_wgs_processing_pipeline_index_refs_3.sh``` script should be run once GVCFs have been generated for all samples   
+  * The third ```cohort_wgs_processing_pipeline_index_refs_3.sh``` script should be run once all GVCFs (for all samples) have been generated. This script performs joing variant calling, as well as downstream variant quality score recalibration for both SNPs and indels. By default, this script is written to take in GVCF files for 5 samples, but the argument parser can be modified to accept any number of samples.
+     ```
+     GVCF1=$1
+     GVCF2=$2
+     GVCF3=$3
+     GVCF4=$4
+     GVCF5=$5
+     OUT_PREF=$6
+     REF_GENOME=$7
+     READ_GROUPS=$8
+     INTER_DIR=$9
+     DBSNP=$10
+     MILLS=$11
+     SNPS1000G=$12
+     OMNI=$13
+     HAPMAP=$14
+     THREADS=$15
+     RAM=$16
 
 
 * ```MAIN_DIR``` - The main root directory to which all sub-directories and output files will be written to
