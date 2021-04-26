@@ -55,7 +55,16 @@ In total, we will need the following files:
 
 There are variable assignments in the script for ClinVar and dbSNP reference files, as well, but these are not actually used in this workflow.
 
-## Included scripts
+## Usage
+Optional: If you are unsure about or interested in assessing the quality of your raw reads prior to alignment, you can so do using ```fastqc```. a tool included in the Anaconda environment:
+```
+FASTQ1=/path/to/forward/read
+FASTQ2=/path/to/reverse/read
+FASTQC_OUT=/path/to/desired/output directory (will be created by fastqc)
+fastqc -o $FASTQC_OUT $FASTQ1 $FASTQ2
+```
+
+### Included scripts
 This repository contains several variations of the core pipeline script:
 * The ```individual_genotyping``` directory contains scripts that should be used when working with sequencing data from a single individual, meaning that you will not be performing joing genotyping. The ```cluster_individual_wgs_processing_pipeline.sh``` script is optimized for running on a UNIX-based cluster, while the ```desktop_individual_wgs_processing_pipeline.sh``` should be used if you are running this pipeline on a desktop computer. It has only been tested on macOS and Linux, although it should also work in a UNIX-based terminal on Windows. If you are using a cluster, the pipeline script should be run interactively (as opposed to as a batch submission), as some of the GATK tools will otherwise not run properly.
   * You can run this script by specifying the required command line arguments, which will be read in by the parser. The cluster-optimized script can be run in exactly the same way, except that the RAM argument does not need to be specified.
@@ -65,7 +74,7 @@ This repository contains several variations of the core pipeline script:
     OUT_PREF=string (desired prefix for all output files)
     MAIN_OUT_DIR=/path/to/desired/root/directory/for/outputs
     REF_GENOME=path/to/reference/fasta
-    READ_GROUPS=string (information on required format found at https://gatk.broadinstitute.org/hc/en-us/articles/360035890671-Read-groups)
+    READ_GROUPS=string (information on required format found at https://gatk.broadinstitute.org/hc/en-us/articles/360035890671-Read-groups, use "samtools view -H aligned_hg19.bam | grep '@RG" to find read group names in an existing BAM file) 
     TMP_DIR=$MAIN_OUT_DIR\/path/to/directory/for/temp/files (will be created by the pipeline script)
     INTER_DIR=$MAIN_OUT_DIR\/path/to/store/intermediate/files/during/processing (will be created by the pipeline script)
     DBSNP=/path/to/dbsnp/reference/file
@@ -121,7 +130,7 @@ This repository contains several variations of the core pipeline script:
     FASTQ2=/path/to/reverse/read
     MAIN_OUT_DIR=/path/to/desired/root/directory/for/outputs
     OUT_PREF=string (desired prefix for all output files)
-    REF_GENOME=path/to/reference/fasta
+    REF_GENOME=/path/to/reference/fasta
     READ_GROUPS=string (information on required format found at https://gatk.broadinstitute.org/hc/en-us/articles/360035890671-Read-groups)
     TMP_DIR=$MAIN_OUT_DIR\/path/to/directory/for/temp/files (will be created by the pipeline script)
     INTER_DIR=$MAIN_OUT_DIR\/path/to/store/intermediate/files/during/processing (will be created by the pipeline script)
@@ -131,8 +140,9 @@ This repository contains several variations of the core pipeline script:
     OMNI=/path/to/omni/reference/file
     HAPMAP=/path/to/hapmap/reference/file
     THREADS=int (number of CPU threads to use)
-     
-    cohort_wgs_processing_pipeline_index_refs_2.sh \
+    RAM=int (amount of RAM to use in GB)
+    
+    desktop_cohort_wgs_processing_pipeline_index_refs_2.sh \
       $FASTQ1 \
       $FASTQ2 \
       $MAIN_OUT_DIR \
@@ -146,59 +156,52 @@ This repository contains several variations of the core pipeline script:
       $SNPS1000G \
       $OMNI \
       $HAPMAP \
-      $THREADS
+      $THREADS \
+      $RAM
      ```
-  * The third ```cohort_wgs_processing_pipeline_index_refs_3.sh``` script should be run once all GVCFs (for all samples) have been generated. This script performs joing variant calling, as well as downstream variant quality score recalibration for both SNPs and indels. By default, this script is written to take in GVCF files for 5 samples, but the argument parser can be modified to accept any number of samples.
-     ```
-     GVCF1=$1
-     GVCF2=$2
-     GVCF3=$3
-     GVCF4=$4
-     GVCF5=$5
-     OUT_PREF=$6
-     REF_GENOME=$7
-     READ_GROUPS=$8
-     INTER_DIR=$9
-     DBSNP=$10
-     MILLS=$11
-     SNPS1000G=$12
-     OMNI=$13
-     HAPMAP=$14
-     THREADS=$15
-     RAM=$16
+  * The third ```desktop_cohort_wgs_processing_pipeline_index_refs_3.sh``` script should be run once all GVCFs (for all samples) have been generated. This script performs joing variant calling, as well as downstream variant quality score recalibration for both SNPs and indels. By default, this script is written to take in GVCF files for 5 samples, but the argument parser can be modified to accept any number of samples. The ```cluster_cohort_wgs_processing_pipeline_index_refs_3.sh``` script optimized for use on a cluster would be run in the same way, except that the final RAM argument should not be specified.
+    ```
+    GVCF1=/path/to/sample1/gvcf
+    GVCF2=/path/to/sample2/gvcf
+    GVCF3=/path/to/sample3/gvcf
+    GVCF4=/path/to/sample4/gvcf
+    GVCF5=/path/to/sample5/gvcf
+    OUT_PREF=string (desired prefix for all output files)
+    REF_GENOME=/path/to/reference/fasta
+    INTER_DIR=/path/to/store/intermediate/files/during/processing (will be created by the pipeline script)
+    DBSNP=/path/to/dbsnp/reference/file
+    MILLS=/path/to/mills/reference/file
+    SNPS1000G=/path/to/1000_genomes/reference/file
+    OMNI=/path/to/omni/reference/file
+    HAPMAP=/path/to/hapmap/reference/file
+    THREADS=int (number of CPU threads to use)
+    RAM=int (amount of RAM to use in GB)
+     
+    desktop_cohort_wgs_processing_pipeline_index_refs_2.sh \
+      $GVCF1 \
+      $GVCF2 \
+      $GVCF3 \
+      $GVCF4 \
+      $GVCF5 \
+      $OUT_PREF \
+      $REF_GENOME \
+      $INTER_DIR \
+      $DBSNP \
+      $MILLS \
+      $SNPS1000G \
+      $OMNI \
+      $HAPMAP \
+      $THREADS \
+      $RAM
+    ```
 
-
-* ```MAIN_DIR``` - The main root directory to which all sub-directories and output files will be written to
-* ```FASTQ1``` - The first paired-end FASTQ file (forward reads)
-* ```FASTQ2``` - The second paired-end FASTQ file (reverse reads)
-* ```OUT_PREF``` - A string containing the prefix with which all output files will be named
-* ```FASTQC_OUT``` - The output directory to which fastqc results will be written
-* ```REF_GENOME``` - Directory containing the reference genome FASTA
-* ```READ_GROUPS``` - A string containing all of the read groups within your sequencing data. If unknown, for Dante Labs data, at least, one can easily find read groups by using the following command on one's hg19-aligned BAM file:
-```
-samtools view -H aligned_hg19.bam | grep '@RG
-```
-* ```TMP_DIR``` - A directory that will be generated to temporarily store intermediate files over the course of the workflow
-* ```INTER_DIR``` - A directory to which intermediate files will be saved (such as pre-filtered BAMs and VCFs)
-* ```MILLS```, ```SNPs_1000G```, ```OMNI```, ```HAPMAP``` - Paths to the required reference files described above
-* ```DBSNP```, ```CLINVAR```, and ```CLINVAR_WITH_CHR``` - Paths to the non-required and unused ```DBSNP``` and ```CLINVAR``` reference files. These variable paths can simply be left as-is.
-* ```THREADS``` - The number of CPU threads that one wishes to use (if unsure how many to use, 1 is likely the safest option)
-* ```RAM``` - The amount of RAM (in GB) that one wishes to use (if unsure, 1 is likely the safest option)
-
-Once all variable paths are properly specified, one should be able to run the script, either via submission to a job scheduler (SLURM or LSF) or by simply calling the script directly in a Linux terminal:
-```
-./personal_genome_processing_pipeline.sh
-```
-
-If one is unsure of the suitability of their FASTQ read depth/quality, it would be best to run only the fastqc command initially and evaluate those results before deciding if the quality is high enough to merit downstream read mapping:
-```
-mkdir $FASTQC_OUT
-fastqc -o $FASTQC_OUT $FASTQ1 $FASTQ2
-```
-
-Once this script is completely finished running, the most significant files that can be used for downstream analysis will be ```$MAIN_DIR\/$OUT_PREF\.sorted.merged.sorted.marked_duplicates.recalibrated.bam``` (BAM containing your aligned reads), ```$MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz``` (VCF cotaining SNPs and indels), ```$MAIN_DIR\/$OUT_PREF\.snp.vcf.gz``` (VCF containing SNPs only), and ```$MAIN_DIR\/$OUT_PREF\.indel.vcf.gz``` (VCF containing indels only). 
+Once the pipeline has completed running, the files you will likely want to retain for downstream analysis will be
+* ```$MAIN_DIR\/$OUT_PREF\.sorted.merged.sorted.marked_duplicates.recalibrated.bam``` (BAM containing your aligned reads)
+* ```$MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz``` (recalibrated VCF cotaining SNP and indel calls)
 
 ## Initial variant annotation using GenomeChronicler
+This GenomeChronicler workflow is best thought of as an interesting exploratory analysis, generating a neat PDF report of GWAS associations with common variants present in the input BAM file. It is likely not applicable to most research contexts and should be considered separate from the main variant-valling workflow detailed above.
+
 ### Installing Golang and Singlularity (summarized from Golang and Singularity documentation)
 The easiest way to run GenomeChronicler is via a Singularity container, which in turn requires a Golang installation. Running Singularity containers is very similar to Docker, and more information about Singularity can be found at the following link: https://sylabs.io/guides/3.1/user-guide/quick_start.html. Go installation documentation: https://golang.org/doc/install. 
 
