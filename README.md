@@ -1,6 +1,6 @@
 # wgs-processing-pipeline
 ## Introduction
-This pipeline is intended for use with aligning whole genome sequencing data to a reference genome and performing subsequent variant calling. Two sets of pipeline scripts are included, one for performing variant calling on a single sample and another set for performing joing variant calling on a set of multiple samples. The sequential workflow used here is based on guidelines outlined in the GATK Best Practices Workflow (https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows).
+This pipeline is intended for use in the initial processing (alignment and variant calling) of whole genome sequencing data. Two sets of pipeline scripts are included, one for performing variant calling on a single sample and another set for performing joing variant calling on a set of multiple samples. The sequential workflow used here is based on guidelines outlined in the GATK Best Practices Workflow (https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows).
 
 ### Variant calling pipeline
 The included ```desktop_individual_wgs_processing_pipeline_individual.sh``` or ```desktop_individual_wgs_processing_pipeline_individual.sh``` scripts (depending on one's computational setup) are the simplest ways to run the pipeline. Details can be found under the Included Scripts section, including documentation for additional scripts provided for joint genotyping (if processing multiple samples simultaneously).
