@@ -3,7 +3,7 @@
 This pipeline is intended for use in the initial processing (alignment and variant calling) of whole genome sequencing data. Two sets of pipeline scripts are included, one for performing variant calling on a single sample and another set for performing joing variant calling on a set of multiple samples. The sequential workflow used here is based on guidelines outlined in the GATK Best Practices Workflow (https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows).
 
 ### Variant calling pipeline
-The included ```desktop_individual_wgs_processing_pipeline_individual.sh``` or ```desktop_individual_wgs_processing_pipeline_individual.sh``` scripts (depending on one's computational setup) are the simplest ways to run the pipeline. Details can be found under the Included Scripts section, including documentation for additional scripts provided for joint genotyping (if processing multiple samples simultaneously).
+The included ```desktop_individual_wgs_processing_pipeline_individual.sh``` or ```cluster_individual_wgs_processing_pipeline_individual.sh``` scripts (depending on one's computational setup) are the simplest ways to run the pipeline. Details can be found under the Included Scripts section, including documentation for additional scripts provided for joint genotyping (if processing multiple samples simultaneously).
 
 and then proceeds to map the paired reads to the most current genome build (GRCh38/hg38) using ```bwa-mem```. After some downstream processing, variants (SNPs and indels) are called using GATK's ```HaplotypeCaller```. The resulting single VCF can optionally be split into separate SNP and indel files.
 
