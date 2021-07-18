@@ -10,20 +10,20 @@
 
 #For Dante Labs data, the read group(s) of your sample can be determined by running the following command with your hg19 aligned BAM file:
 #   samtools view -H sample.bam | grep '@RG'
-FASTQ1=$1
-FASTQ2=$2
-OUT_PREF=$3
-MAIN_OUT_DIR=$4
-REF_GENOME=$5
-READ_GROUPS=$6
-TMP_DIR=$7
-INTER_DIR=$8
-DBSNP=$9
-MILLS=$10
-SNPS1000G=$11
-OMNI=$12
-HAPMAP=$13
-THREADS=$14
+FASTQ1=${1}
+FASTQ2=${2}
+OUT_PREF=${3}
+MAIN_OUT_DIR=${4}
+REF_GENOME=${5}
+READ_GROUPS=${6}
+TMP_DIR=${7}
+INTER_DIR=${8}
+DBSNP=${9}
+MILLS=${10}
+SNPS1000G=${11}
+OMNI=${12}
+HAPMAP=${13}
+THREADS=${14}
 
 #Index the downloaded refrence genome using BWA
 echo 'Indexing reference genome...'
@@ -132,7 +132,7 @@ bgzip $INTER_DIR\/$OUT_PREF\.g.vcf
 echo 'Genotyping pre-called samples...'
 gatk GenotypeGVCFs \
 -R $REF_GENOME \
--V $INTER_DIR\/$OUT_PREF\.g.vcf \
+-V $INTER_DIR\/$OUT_PREF\.g.vcf.gz \
 -O $INTER_DIR\/$OUT_PREF\.vcf
 
 bgzip $INTER_DIR\/$OUT_PREF\.vcf
@@ -198,25 +198,25 @@ bgzip $MAIN_OUT_DIR\/$OUT_PREF\.recal.snp.indel.vcf
 tabix -f -p vcf $MAIN_OUT_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz
 
 #Split the final VCF output into two separate SNP and indel VCF files
-echo 'Splitting VCF into separate SNP and indel files...'
-vcftools \
-	--gzvcf $MAIN_OUT_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz \
-	--remove-indels \
-	--recode \
-	--recode-INFO-all \
-	--stdout > \
-	$MAIN_OUT_DIR\/$OUT_PREF\.snp.vcf
+#echo 'Splitting VCF into separate SNP and indel files...'
+#vcftools \
+#	--gzvcf $MAIN_OUT_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz \
+#	--remove-indels \
+#	--recode \
+#	--recode-INFO-all \
+#	--stdout > \
+#	$MAIN_OUT_DIR\/$OUT_PREF\.snp.vcf
 
-bgzip $MAIN_OUT_DIR\/$OUT_PREF\.snp.vcf
-tabix -f -p vcf $MAIN_OUT_DIR\/$OUT_PREF\.snp.vcf.gz
+#bgzip $MAIN_OUT_DIR\/$OUT_PREF\.snp.vcf
+#tabix -f -p vcf $MAIN_OUT_DIR\/$OUT_PREF\.snp.vcf.gz
 
-vcftools \
-	--gzvcf $MAIN_OUT_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz \
-	--keep-only-indels \
-	--recode \
-	--recode-INFO-all \
-	--stdout > \
-	$MAIN_OUT_DIR\/$OUT_PREF\.indel.vcf
+#vcftools \
+#	--gzvcf $MAIN_OUT_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz \
+#	--keep-only-indels \
+#	--recode \
+#	--recode-INFO-all \
+#	--stdout > \
+#	$MAIN_OUT_DIR\/$OUT_PREF\.indel.vcf
 
-bgzip $MAIN_OUT_DIR\/$OUT_PREF\.indel.vcf
-tabix -f -p vcf $MAIN_OUT_DIR\/$OUT_PREF\.indel.vcf
+#bgzip $MAIN_OUT_DIR\/$OUT_PREF\.indel.vcf
+#tabix -f -p vcf $MAIN_OUT_DIR\/$OUT_PREF\.indel.vcf

@@ -10,21 +10,21 @@
 
 #For Dante Labs data, the read group(s) of your sample can be determined by running the following command with your hg19 aligned BAM file:
 #   samtools view -H sample.bam | grep '@RG'
-FASTQ1=$1
-FASTQ2=$2
-MAIN_OUT_DIR=$3
-OUT_PREF=$4
-REF_GENOME=$5
-READ_GROUPS=$6
-TMP_DIR=$7
-INTER_DIR=$8
-DBSNP=$9
-MILLS=$10
-SNPS1000G=$11
-OMNI=$12
-HAPMAP=$13
-THREADS=$14
-RAM=$15
+FASTQ1=${1}
+FASTQ2=${2}
+MAIN_OUT_DIR=${3}
+OUT_PREF=${4}
+REF_GENOME=${5}
+READ_GROUPS=${6}
+TMP_DIR=${7}
+INTER_DIR=${8}
+DBSNP=${9}
+MILLS=${10}
+SNPS1000G=${11}
+OMNI=${12}
+HAPMAP=${13}
+THREADS=${14}
+RAM=${15}
 
 #Align the FASTQ files using BWA-MEM
 echo 'Aligning reads to the reference genome...'

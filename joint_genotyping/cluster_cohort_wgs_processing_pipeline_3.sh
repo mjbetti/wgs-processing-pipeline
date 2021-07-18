@@ -13,22 +13,22 @@
 
 #Modify the number of GVCF arguments to account for the number of individuals that will be jointly genotyped. This script has arguments for 5 GVCFs included by default
 
-GVCF1=$1
-GVCF2=$2
-GVCF3=$3
-GVCF4=$4
-GVCF5=$5
-OUT_PREF=$6
-REF_GENOME=$7
-READ_GROUPS=$8
-INTER_DIR=$9
-DBSNP=$10
-MILLS=$11
-SNPS1000G=$12
-OMNI=$13
-HAPMAP=$14
-THREADS=$15
-RAM=$16
+GVCF1=${1}
+GVCF2=${2}
+GVCF3=${3}
+GVCF4=${4}
+GVCF5=${5}
+OUT_PREF=${6}
+REF_GENOME=${7}
+READ_GROUPS=${8}
+INTER_DIR=${9}
+DBSNP=${10}
+MILLS=${11}
+SNPS1000G=${12}
+OMNI=${13}
+HAPMAP=${14}
+THREADS=${15}
+RAM=${16}
 
 #Perform genotyping on one or more samples pre-called with HaplotypeCaller
 echo 'Genotyping pre-called samples...'
@@ -105,24 +105,24 @@ tabix -f -p vcf $MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz
 
 #Split the final VCF output into two separate SNP and indel VCF files
 echo 'Splitting VCF into separate SNP and indel files...'
-vcftools \
-	--gzvcf $MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz \
-	--remove-indels \
-	--recode \
-	--recode-INFO-all \
-	--stdout > \
-	$MAIN_DIR\/$OUT_PREF\.snp.vcf
+#vcftools \
+#	--gzvcf $MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz \
+#	--remove-indels \
+#	--recode \
+#	--recode-INFO-all \
+#	--stdout > \
+#	$MAIN_DIR\/$OUT_PREF\.snp.vcf
 
-bgzip $MAIN_DIR\/$OUT_PREF\.snp.vcf
-tabix -f -p vcf $MAIN_DIR\/$OUT_PREF\.snp.vcf.gz
+#bgzip $MAIN_DIR\/$OUT_PREF\.snp.vcf
+#tabix -f -p vcf $MAIN_DIR\/$OUT_PREF\.snp.vcf.gz
 
-vcftools \
-	--gzvcf $MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz \
-	--keep-only-indels \
-	--recode \
-	--recode-INFO-all \
-	--stdout > \
-	$MAIN_DIR\/$OUT_PREF\.indel.vcf
+#vcftools \
+#	--gzvcf $MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz \
+#	--keep-only-indels \
+#	--recode \
+#	--recode-INFO-all \
+#	--stdout > \
+#	$MAIN_DIR\/$OUT_PREF\.indel.vcf
 
-bgzip $MAIN_DIR\/$OUT_PREF\.indel.vcf
-tabix -f -p vcf $MAIN_DIR\/$OUT_PREF\.indel.vcf
+#bgzip $MAIN_DIR\/$OUT_PREF\.indel.vcf
+#tabix -f -p vcf $MAIN_DIR\/$OUT_PREF\.indel.vcf
