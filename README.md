@@ -35,14 +35,16 @@ Assuming you have Anaconda already installed on your machine, the environment ca
 ```conda env create -f wgs_pipeline_env.yml```
 
 ### Downloading reference files
-Most of the required reference files can be downloaded from the Broad Institute's Google Cloud Bucket (https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/). The dbSNP reference panel was downloaded from downloaded from https://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606_b151_GRCh38p7/VCF/GATK/
+Most of the required reference files can be downloaded from the Broad Institute's Google Cloud Bucket (https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/). The dbSNP reference panel was downloaded from downloaded from https://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606_b151_GRCh38p7/VCF/GATK/
+
+A download script (```download_hg38_ref_files.sh```) is included in this repository to conveniently download all of these files to the directory of your choosing.
 
 In total, we will need the following files:
-* GRCh38 (hg38) reference genome FASTA (```resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta```)
-* Mills and 1000 Genomes gold standard indels (```resources-broad-hg38-v0-Mills_and_1000G_gold_standard.indels.hg38.vcf```)
-* 1000 Genomes Phase 1 high-confidence SNPs (```resources-broad-hg38-v0-1000G_phase1.snps.high_confidence.hg38.vcf```)
-* Omni reference panel (```resources-broad-hg38-v0-1000G_omni2.5.hg38.vcf```)
-* HapMap reference panel (```resources-broad-hg38-v0-hapmap_3.3.hg38.vcf```)
+* GRCh38 (hg38) reference genome FASTA (```Homo_sapiens_assembly38.fasta```)
+* Mills and 1000 Genomes gold standard indels (```Mills_and_1000G_gold_standard.indels.hg38.vcf.gz```)
+* 1000 Genomes Phase 1 high-confidence SNPs (```1000G_phase1.snps.high_confidence.hg38.vcf.gz```)
+* Omni reference panel (```1000G_omni2.5.hg38.vcf.gz```)
+* HapMap reference panel (```hapmap_3.3.hg38.vcf.gz```)
 * dbSNP reference panel (```00-All.vcf.gz```)
 
 There are variable assignments in the script for ClinVar and dbSNP reference files, as well, but these are not actually used in this workflow.

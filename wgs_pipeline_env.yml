@@ -1,4 +1,4 @@
-name: wgs_pipeline
+name: wgs_pipeline_env
 channels:
   - bioconda
   - r
@@ -18,3 +18,4 @@ dependencies:
   - samtools
   - vcftools
   - tabix
+  - gsutil
