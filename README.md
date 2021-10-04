@@ -154,13 +154,14 @@ This repository contains several variations of the core pipeline script:
       $THREADS \
       $RAM
      ```
-  * The third ```desktop_cohort_wgs_processing_pipeline_index_refs_3.sh``` script should be run once all GVCFs (for all samples) have been generated. This script performs joing variant calling, as well as downstream variant quality score recalibration for both SNPs and indels. By default, this script is written to take in GVCF files for 5 samples, but the argument parser can be modified to accept any number of samples. The ```cluster_cohort_wgs_processing_pipeline_index_refs_3.sh``` script optimized for use on a cluster would be run in the same way, except that the final RAM argument should not be specified.
+  * The third ```desktop_cohort_wgs_processing_pipeline_index_refs_3.sh``` script should be run once all GVCFs (for all samples) have been generated. This script performs joing variant calling, as well as downstream variant quality score recalibration for both SNPs and indels. By default, this script is written to take in GVCF files for 6 samples, but the argument parser can be modified to accept any number of samples. The ```cluster_cohort_wgs_processing_pipeline_index_refs_3.sh``` script optimized for use on a cluster would be run in the same way, except that the final RAM argument should not be specified.
     ```
     GVCF1=/path/to/sample1/gvcf
     GVCF2=/path/to/sample2/gvcf
     GVCF3=/path/to/sample3/gvcf
     GVCF4=/path/to/sample4/gvcf
     GVCF5=/path/to/sample5/gvcf
+    GVCF6=/path/to/sample6/gvcf
     OUT_PREF=string (desired prefix for all output files)
     REF_GENOME=/path/to/reference/fasta
     INTER_DIR=/path/to/store/intermediate/files/during/processing (will be created by the pipeline script)
@@ -178,6 +179,7 @@ This repository contains several variations of the core pipeline script:
       $GVCF3 \
       $GVCF4 \
       $GVCF5 \
+      $GVCF6 \
       $OUT_PREF \
       $REF_GENOME \
       $INTER_DIR \

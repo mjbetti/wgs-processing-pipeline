@@ -105,3 +105,6 @@ gatk HaplotypeCaller \
     -ERC GVCF
 
 bgzip $INTER_DIR\/$OUT_PREF\.g.vcf
+
+gatk IndexFeatureFile \
+	-I $INTER_DIR\/$OUT_PREF\.g.vcf.gz

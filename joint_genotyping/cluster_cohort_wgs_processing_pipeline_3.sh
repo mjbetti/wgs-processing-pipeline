@@ -11,37 +11,48 @@
 #For Dante Labs data, the read group(s) of your sample can be determined by running the following command with your hg19 aligned BAM file:
 #   samtools view -H sample.bam | grep '@RG'
 
-#Modify the number of GVCF arguments to account for the number of individuals that will be jointly genotyped. This script has arguments for 5 GVCFs included by default
+#Modify the number of GVCF arguments to account for the number of individuals that will be jointly genotyped. This script has arguments for 6 GVCFs included by default
 
 GVCF1=${1}
 GVCF2=${2}
 GVCF3=${3}
 GVCF4=${4}
 GVCF5=${5}
-OUT_PREF=${6}
-REF_GENOME=${7}
-READ_GROUPS=${8}
-INTER_DIR=${9}
-DBSNP=${10}
-MILLS=${11}
-SNPS1000G=${12}
-OMNI=${13}
-HAPMAP=${14}
-THREADS=${15}
-RAM=${16}
+GVCF6=${6}
+OUT_PREF=${7}
+REF_GENOME=${8}
+MAIN_DIR=${9}
+INTER_DIR=${10}
+DBSNP=${11}
+MILLS=${12}
+SNPS1000G=${13}
+OMNI=${14}
+HAPMAP=${15}
+THREADS=${16}
+
+#Combine the individual gVCFs into a single joint file
+echo 'Combining pre-called samples...'
+gatk CombineGVCFs \
+	-R $REF_GENOME \
+	--variant $GVCF1 \
+	--variant $GVCF2 \
+	--variant $GVCF3 \
+	--variant $GVCF4 \
+	--variant $GVCF5 \
+	--variant $GVCF6 \
+	-O $INTER_DIR\/$OUT_PREF\.cohort.g.vcf
 
 #Perform genotyping on one or more samples pre-called with HaplotypeCaller
 echo 'Genotyping pre-called samples...'
 gatk GenotypeGVCFs \
--R $REF_GENOME \
--V $GVCF1 \
--V $GVCF2 \
--V $GVCF3 \
--V $GVCF4 \
--V $GVCF5 \
--O $INTER_DIR\/$OUT_PREF\.vcf
+	-R $REF_GENOME \
+	-V $INTER_DIR\/$OUT_PREF\.cohort.g.vcf \
+	-O $INTER_DIR\/$OUT_PREF\.vcf
 
 bgzip $INTER_DIR\/$OUT_PREF\.vcf
+
+gatk IndexFeatureFile \
+	-I $INTER_DIR\/$OUT_PREF\.vcf.gz
 
 #Build a SNP recalibration model to score variant quality and then apply it to filter the SNPS in the generated VCF
 #Referred to WGS recalibration code on (https://github.com/BD2KGenomics/gatk-whole-genome-pipeline/blob/master/HAPvariantCalling.sh)
@@ -74,6 +85,10 @@ gatk ApplyVQSR \
 
 bgzip $INTER_DIR\/$OUT_PREF\.recal.snp.vcf
 
+gatk IndexFeatureFile \
+	-I $INTER_DIR\/$OUT_PREF\.recal.snp.vcf.gz
+
+
 #Perform a second round of recalibration, this time focusing on the indels
 echo 'Building indel recalibration model...'
 gatk VariantRecalibrator \
@@ -101,10 +116,12 @@ gatk ApplyVQSR \
 
 echo 'Compressing and indexing SNP/indel VCF...'
 bgzip $MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf
-tabix -f -p vcf $MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz
+
+gatk IndexFeatureFile \
+	-I $MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz
 
 #Split the final VCF output into two separate SNP and indel VCF files
-echo 'Splitting VCF into separate SNP and indel files...'
+#echo 'Splitting VCF into separate SNP and indel files...'
 #vcftools \
 #	--gzvcf $MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz \
 #	--remove-indels \
@@ -114,7 +131,9 @@ echo 'Splitting VCF into separate SNP and indel files...'
 #	$MAIN_DIR\/$OUT_PREF\.snp.vcf
 
 #bgzip $MAIN_DIR\/$OUT_PREF\.snp.vcf
-#tabix -f -p vcf $MAIN_DIR\/$OUT_PREF\.snp.vcf.gz
+
+#gatk IndexFeatureFile \
+#	-I $MAIN_DIR\/$OUT_PREF\.snp.vcf.gz
 
 #vcftools \
 #	--gzvcf $MAIN_DIR\/$OUT_PREF\.recal.snp.indel.vcf.gz \
@@ -125,4 +144,6 @@ echo 'Splitting VCF into separate SNP and indel files...'
 #	$MAIN_DIR\/$OUT_PREF\.indel.vcf
 
 #bgzip $MAIN_DIR\/$OUT_PREF\.indel.vcf
-#tabix -f -p vcf $MAIN_DIR\/$OUT_PREF\.indel.vcf
+
+#gatk IndexFeatureFile \
+#	-I $MAIN_DIR\/$OUT_PREF\.indel.vcf.gz
